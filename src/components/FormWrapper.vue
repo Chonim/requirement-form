@@ -10,11 +10,11 @@
         {{ selectedInputItem.title }}
       </p>
     </section>
-    <!-- {{ selectedInputItem }} -->
     <component
       :is="componentToRender"
       :input-options="selectedInputItem.options"
-      @change="handleChange()"
+      :saved-output="savedOutput(selectedInputItem.itemId)"
+      @change="handleChange($event)"
     />
   </section>
 </template>
@@ -28,6 +28,10 @@ export default {
     selectedInputItem: {
       type: Object,
       required: true
+    },
+    formId: {
+      type: Number,
+      required: true
     }
   },
   components: {
@@ -35,6 +39,11 @@ export default {
     RadioInput: () => import('@/components/Forms/Radio'),
     SelectBox: () => import('@/components/Forms/SelectBox'),
     TextInput: () => import('@/components/Forms/TextInput')
+  },
+  data () {
+    return {
+      output: null
+    }
   },
   computed: {
     componentToRender () {
@@ -48,8 +57,32 @@ export default {
     }
   },
   methods: {
-    handleChange () {
-      // TODO: save key, value
+    savedOutput (id) {
+      if (!this.output) {
+        return
+      }
+      const foundItem = this.output.items.find(item => item.id === id)
+      return foundItem ? foundItem.answer : undefined
+    },
+    handleChange (answer) {
+      if (!this.output) {
+        this.output = {
+          id: this.formId,
+          items: []
+        }
+      }
+      const id = this.selectedInputItem.itemId
+      const foundItem = this.output.items.find(item => item.id === id)
+      if (foundItem) {
+        foundItem.answer = answer
+      } else {
+        this.output.items.push({
+          id,
+          answer
+        })
+      }
+      console.log(this.output)
+      this.$emit('outputChange', this.output)
     }
   }
 }

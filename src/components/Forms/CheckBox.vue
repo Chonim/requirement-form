@@ -6,8 +6,11 @@
     >
       <input
         type="checkbox"
+        :value="option.text"
+        :checked="savedOutput.includes(option.text)"
         :name="`checkbox${option.id}`"
         :id="`checkbox${option.id}`"
+        @click="handleClick(option.text)"
       >
       <label :for="`checkbox${option.id}`">
         {{ option.text }}
@@ -23,6 +26,35 @@ export default {
     inputOptions: {
       type: Array,
       required: true
+    },
+    savedOutput: {
+      type: Array,
+      required: false,
+      default: () => []
+    }
+  },
+  data () {
+    return {
+      checkedOptions: []
+    }
+  },
+  watch: {
+    savedOutput: {
+      immediate: true,
+      handler () {
+        this.checkedOptions = this.savedOutput
+      }
+    }
+  },
+  methods: {
+    handleClick (text) {
+      const index = this.checkedOptions.findIndex(option => option === text)
+      if (index > -1) {
+        this.checkedOptions.splice(index, 1)
+      } else {
+        this.checkedOptions.push(text)
+      }
+      this.$emit('change', this.checkedOptions)
     }
   }
 }

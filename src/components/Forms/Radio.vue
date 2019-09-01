@@ -6,8 +6,11 @@
     >
       <input
         type="radio"
+        :value="option.text"
+        :checked="option.text === savedOutput"
         :name="`radio${option.id}`"
         :id="`radio${option.id}`"
+        @click="handleClick(option.text)"
       >
       <label :for="`radio${option.id}`">
         {{ option.text }}
@@ -23,6 +26,15 @@ export default {
     inputOptions: {
       type: Array,
       required: true
+    },
+    savedOutput: {
+      type: String,
+      required: false
+    }
+  },
+  methods: {
+    handleClick (text) {
+      this.$emit('change', text)
     }
   }
 }

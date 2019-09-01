@@ -1,4 +1,6 @@
 module.exports = {
+  silent: true,
+  collectCoverage: true,
   moduleFileExtensions: [
     'js',
     'jsx',

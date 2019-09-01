@@ -7,13 +7,14 @@
     >Back</button>
 
     <button
-      :disabled="isLastStep"
+      v-show="!isLastStep"
       @click="$emit('nextClick')"
     >Next</button>
 
     <!-- show only when all questions are answered -->
     <button
       v-show="isLastStep"
+      @click="$emit('submitClick')"
     >
       Submit
     </button>
